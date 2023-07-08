@@ -3,30 +3,31 @@ import { sequelizeInstance } from "../connection.js";
 
 
 
-export const userModel= sequelizeInstance.define('user',{
+export const gameModel= sequelizeInstance.define('game',{
     id:{
         type:DataTypes.INTEGER(11),
         primaryKey:true,
         autoIncrement:true
     },
-    name:{
+    creator_id:{
         type:DataTypes.STRING(55),
-        allowNull:false
+        references: {
+            model: User,
+            key: 'id',
+          },
     },
-    userName:{ 
+    status:{ 
         type:DataTypes.STRING(55),
-        allowNull:false,
-        unique:true
     },
    
-    password:{
+    board_id:{//forign key 
         type:DataTypes.STRING(55),
         allowNull:false,
         
     },
-   
+    
         },{timestamps:true}
 )
 
 
-console.log(userModel == sequelizeInstance.models.user)
+console.log(gameModel == sequelizeInstance.models.user)

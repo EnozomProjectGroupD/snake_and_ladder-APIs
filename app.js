@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
-import * as usercontrol from "./routes/modules/user/user.controller.js"
+import * as usercontrol from "./controllers/user.controller.js"
 const app = express();
 
 // Middlewares

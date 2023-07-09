@@ -19,7 +19,7 @@ const Player = sequelize.define('Player', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  order: {
+  player_order: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

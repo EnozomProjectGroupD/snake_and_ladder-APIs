@@ -7,7 +7,7 @@ import SnakeLadder from "../models/Snake_Ladder.js";
 
 const createTables = () => {
   sequelize
-    .sync({ force: true }) 
+    .sync({ force: true })
     .then(() => {
       console.log("Tables have been created");
     })

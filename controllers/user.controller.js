@@ -9,7 +9,8 @@ const signUp = async (req, res) => {
   try {
     const foundUser =await User.findOne({username})
     if(foundUser){
-      res.send('user name already exist')
+      res.status(400).send('user name already exists');
+      return;
     }
     const user = await User.create({ name, username, password });
     res.json({ message: "User created successfully", user });
@@ -25,6 +26,7 @@ const signUp = async (req, res) => {
 
 const logIn = async (req, res) => {
   const { username, password } = req.body;
+  console.log(username);
   try {
     const user = await User.findOne({ username, password });
     res.json({ message: "logIn successfully", user });

@@ -1,7 +1,7 @@
 // * db connection
 import { Sequelize } from "sequelize";
 
-export const sequelizeInstance =new Sequelize('sqlize','root','',{
+export const sequelizeInstance =new Sequelize('snakeandladder','root','',{
     host:'localhost',
     dialect:'mysql'
 })

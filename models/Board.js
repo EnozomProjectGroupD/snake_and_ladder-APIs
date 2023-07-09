@@ -8,7 +8,7 @@ const Board = sequelize.define("Board", {
     primaryKey: true,
   },
   Buffer: {
-    type: DataTypes.STRING,
+    type: DataTypes.BLOB("long"),
     allowNull: false,
   },
 });

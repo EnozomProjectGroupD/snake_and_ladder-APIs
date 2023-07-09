@@ -1,6 +1,5 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
-import auth from "../middlewares/auth.js";
 
 
 // #####
@@ -11,7 +10,6 @@ const signUp = async (req, res) => {
   const { name, username, password } = req.body;
   try {
     const user = await User.create({ name, username, password });
-    // const token = auth.generateToken(user);
     console.log(user.id);
 
     const token = user.generateToken();
@@ -30,7 +28,7 @@ const logIn = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ where: { username } });
-    const token = user.generateToken();
+
 
     if (!user) {
       res.status(404).json({ message: "User not found. Please sign up" });
@@ -45,6 +43,7 @@ const logIn = async (req, res) => {
       return;
     }
 
+    const token = user.generateToken();
     res.json({ message: "Login successful", user, token });
   } catch (error) {
     console.error(error);

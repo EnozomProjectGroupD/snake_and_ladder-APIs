@@ -6,14 +6,14 @@ import Board from "../models/Board.js";
 import SnakeLadder from "../models/Snake_Ladder.js";
 
 const createTables = () => {
-  sequelize
-    .sync({ force: true })
-    .then(() => {
-      console.log("Tables have been created");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // sequelize
+  //   .sync({ force: true })
+  //   .then(() => {
+  //     console.log("Tables have been created");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 Game.belongsTo(User, { foreignKey: "creator_id", as: "creator" });

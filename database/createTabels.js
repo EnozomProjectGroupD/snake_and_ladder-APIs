@@ -5,15 +5,15 @@ import Player from "../models/Player.js";
 import Board from "../models/Board.js";
 import SnakeLadder from "../models/Snake_Ladder.js";
 
-const createTables = async () => {
-  try {
-    await sequelize.sync({ force: true });
-    console.log("Tables created successfully.");
-    process.exit(0);
-  } catch (error) {
-    console.error("Error creating tables:", error);
-    process.exit(1);
-  }
+const createTables = () => {
+  sequelize
+    .sync({ force: true }) 
+    .then(() => {
+      console.log("Tables have been created");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 Game.belongsTo(User, { foreignKey: "creator_id", as: "creator" });

@@ -9,11 +9,6 @@ import bcrypt from "bcrypt";
 const signUp = async (req, res) => {
   const { name, username, password } = req.body;
   try {
-    // const foundUser =await User.findOne({username})
-    // if(foundUser){
-    //   res.status(400).send('user name already exists');
-    //   return;
-    // }
     const user = await User.create({ name, username, password });
     res.json({ message: "User created successfully", user });
   } catch (error) {

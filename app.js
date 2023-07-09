@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
-
+import * as usercontrol from "./routes/modules/user/user.controller.js"
 const app = express();
 
 // Middlewares
@@ -21,4 +21,5 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.post("/signUp", usercontrol.signUp);
 export default app;

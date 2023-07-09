@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelizeInstance } from "../db.connection";
+import { sequelizeInstance } from "../database/db.connection";
 import { userModel } from './user.model';
 
 

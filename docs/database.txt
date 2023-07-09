@@ -1,0 +1,14 @@
+User :
+id name username password 
+
+Game:
+id crator_id status board_id currnt_player timestamp players_number
+
+Player:
+id game_id user_id position order
+
+Board:
+id image
+
+Snake_Ladder:
+id board_id type start end

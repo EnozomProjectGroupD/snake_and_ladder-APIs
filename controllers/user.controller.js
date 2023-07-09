@@ -7,6 +7,10 @@ import User from "../models/User.js";
 const signUp = async (req, res) => {
   const { name, username, password } = req.body;
   try {
+    const foundUser =await User.findOne({username})
+    if(foundUser){
+      res.send('user name already exist')
+    }
     const user = await User.create({ name, username, password });
     res.json({ message: "User created successfully", user });
   } catch (error) {

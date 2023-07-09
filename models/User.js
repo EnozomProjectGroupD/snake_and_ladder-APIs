@@ -2,8 +2,6 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/connection.js";
 import bcrypt from "bcrypt";
 
-
-
 const User = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
@@ -13,6 +11,7 @@ const User = sequelize.define("User", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   username: {
     type: DataTypes.STRING,
@@ -22,12 +21,26 @@ const User = sequelize.define("User", {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    set(value) {
-      // Hash the password using bcrypt before saving
-      const hashedPassword = bcrypt.hashSync(value, 10);
-      this.setDataValue("password", hashedPassword);
+  },
+}, {
+  hooks: {
+    beforeSave: async (user) => {
+      if (user.changed("password")) {
+        const salt = await bcrypt.genSaltSync(10);
+        user.password = bcrypt.hashSync(user.password, salt);
+      }
+    },
+    afterUpdate: async (user) => {
+      if (user.changed("password")) {
+        const salt = await bcrypt.genSaltSync(10);
+        user.password = bcrypt.hashSync(user.password, salt);
+      }
     },
   },
 });
+
+User.prototype.validPassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 export default User;

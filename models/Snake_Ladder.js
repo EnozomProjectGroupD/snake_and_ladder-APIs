@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../database/connection";
+import sequelize from "../database/connection.js";
 
 const SnakeLadder = sequelize.define("SnakeLadder", {
   id: {

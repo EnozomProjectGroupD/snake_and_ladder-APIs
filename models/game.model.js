@@ -1,6 +1,12 @@
+<<<<<<< HEAD:db/models/game.model.js
 // import { DataTypes } from "sequelize";
 // import { sequelizeInstance } from "../db.connection";
 // import { userModel } from './user.model';
+=======
+import { DataTypes } from "sequelize";
+import { sequelizeInstance } from "../database/db.connection";
+import { userModel } from './user.model';
+>>>>>>> 4799cf2094e79fd07c9df5296de6815032d0d554:models/game.model.js
 
 
 // export const gameModel= sequelizeInstance.define('game',{

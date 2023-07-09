@@ -1,6 +1,12 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/connection.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+import dotenv from "dotenv";
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const User = sequelize.define("User", {
   id: {
@@ -42,5 +48,18 @@ const User = sequelize.define("User", {
 User.prototype.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
+
+User.prototype.generateToken = function(){
+  const payload = {
+    id: this.id,
+  };
+  const token = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: '1h',
+  });
+  return token
+}
+
+// const token = user.generateToken();
+// console.log(token);
 
 export default User;

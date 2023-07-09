@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
+import allRoutes from "./routes/index.router.js";
 const app = express();
 
 // Middlewares
@@ -19,5 +20,7 @@ app.use(
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+app.use("/api", allRoutes);
 
 export default app;

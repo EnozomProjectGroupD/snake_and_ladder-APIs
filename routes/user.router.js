@@ -1,9 +1,8 @@
-// // signUpUser
-
 import { Router } from "express";
-import * as usercontrol from '../controllers/user.controller.js'
+import userController from "../controllers/user.controller.js";
 
+const router = Router();
 
-const router = Router()
-// //*sign up
-app.post('/signUp',usercontrol.signUp)
+router.post("/sign-up", userController.signUp);
+
+export default router;

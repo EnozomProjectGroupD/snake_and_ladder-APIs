@@ -9,33 +9,33 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export  const auth =  (async (req, res, next) => {
     let token;
-    if (req.header.authorization && req.header.authorization.startsWith('Bearer')) {
-        token = req.header.authorization.split(" ")[1];
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(" ")[1];
     }
     if (!token) {
         res.status(404).json("no token found!");
     }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        console.log(decoded.id);
+        const user = await User.findOne({
+            where: {
+                id: decoded.id,
+            }
+        })
+        // console.log(user)
 
-    const decoded = jwt.verify(token, JWT_SECRET);
-    console.log(decoded.id);
-
-    const user = await User.findOne({
-        where: {
-            id: decoded.id,
-            isBlocked: false,
+        if (!user){
+            res.status(404).json("no user found!")
         }
-    })
+        req.user = user;
+        return next();
 
-    if (!user){
-        res.status(404).json("no user found!")
+    }catch (error) {
+        console.log(error)
+        res.status(401).json("Invalid token!");
     }
 
-    if (req.user.id==decoded.id){
-        next();
-    };
-
-    req.user = user;
-    return next();
 });
 
 

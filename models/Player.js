@@ -16,7 +16,7 @@ const Player = sequelize.define('Player', {
     allowNull: false,
   },
   position: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   player_order: {

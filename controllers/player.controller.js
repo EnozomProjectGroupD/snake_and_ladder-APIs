@@ -14,14 +14,16 @@ const movePLayer = async (req, res) => {
   try {
     const rollValue = Math.floor(Math.random() * 6) + 1;
     const playerId = req.body.id;
-    const player = Player.findByPk(playerId);
+    const player = await Player.findByPk(playerId);
+    console.log(player);
     const newPostion = player.position + rollValue;
+    //check if the new position is valid
     if (newPostion <= 100) {
       player.position = newPostion;
     }
     // check if the new position is a ladder or snake
-    const ladderSnakeObj = checkLadderSnake(player.position);
     //if it is a ladder or snake, move the player to the end of the ladder or snake
+    const ladderSnakeObj = await checkLadderSnake(player.position);
     if (ladderSnakeObj) {
       player.position = ladderSnakeObj.end;
     }
@@ -40,7 +42,8 @@ const movePLayer = async (req, res) => {
 const getPosition = async (req, res) => {
   try {
     const playerId = req.body.id;
-    const player = player.findByPk(playerId);
+    const player = await Player.findByPk(playerId);
+    console.log(player);
     res.status(200).json({ position: player.position });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -52,7 +55,7 @@ const checkLadderSnake = async (position) => {
     return undefined;
   }
   try {
-    return LadderSnake.findOne({ where: { start: position } });
+    return await LadderSnake.findOne({ where: { start: position } });
   } catch (error) {
     return undefined;
   }

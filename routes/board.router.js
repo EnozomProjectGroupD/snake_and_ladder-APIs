@@ -7,8 +7,8 @@ const boardRouter = Router();
 
 boardRouter
   .route("/image")
-  .post(uploadFile.single("image"), boardController.createBoard)
-  .put(uploadFile.single("image"), boardController.updateBoard);
+  .post(uploadFile.single("image"), auth, boardController.createBoard)
+  .put(uploadFile.single("image"), auth, boardController.updateBoard);
 
 boardRouter.post("/get/", auth, boardController.getBoard);
 boardRouter.get("/get-all", auth, boardController.getAllBoards);

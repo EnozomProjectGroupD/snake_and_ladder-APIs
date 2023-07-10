@@ -1,5 +1,6 @@
 import Player from "../models/Player.js";
 import LadderSnake from "../models/Snake_Ladder.js";
+import {auth} from "../middlewares/auth.js";
 
 const createPlayer = async (req, res) => {
   try {
@@ -41,9 +42,11 @@ const movePLayer = async (req, res) => {
 // function to return player position
 const getPosition = async (req, res) => {
   try {
-    const playerId = req.body.id;
+    const user = req.user;
+    const playerId = user.id;
     const player = await Player.findByPk(playerId);
     console.log(player);
+
     res.status(200).json({ position: player.position });
   } catch (error) {
     res.status(500).json({ message: error.message });

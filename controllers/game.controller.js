@@ -7,7 +7,7 @@ import Player from "../models/Player.js";
 const createGame = async (req, res) => {
   const { players_number, board_id } = req.body;
   const creator_id = req.user.id;
-  if (!creator_id || !players_number  || !board_id)
+  if (!creator_id || !players_number || !board_id)
     return res.status(400).json({
       error:
         "Missing required fields you should send creator_id, players_number, board_id",

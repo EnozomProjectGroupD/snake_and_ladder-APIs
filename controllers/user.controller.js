@@ -1,7 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
-
 // #####
 // sign up
 // #####
@@ -16,7 +15,8 @@ const signUp = async (req, res) => {
 
     res.json({ message: "User created successfully", user, token });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create user",error });
+    console.error(error);
+    res.status(500).json({ message: "Failed to create user", error });
   }
 };
 
@@ -28,7 +28,6 @@ const logIn = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ where: { username } });
-
 
     if (!user) {
       res.status(404).json({ message: "User not found. Please sign up" });
@@ -51,9 +50,7 @@ const logIn = async (req, res) => {
   }
 };
 
-
-
 export default {
-  signUp, 
-  logIn
-}
+  signUp,
+  logIn,
+};

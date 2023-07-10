@@ -10,6 +10,6 @@ boardRouter
   .post(uploadFile.single("image"), boardController.createBoard)
   .put(uploadFile.single("image"), boardController.updateBoard);
 
-boardRouter.get("/get/:id", auth, boardController.getBoard);
+boardRouter.post("/get/", auth, boardController.getBoard);
 boardRouter.get("/get-all", auth, boardController.getAllBoards);
 export default boardRouter;

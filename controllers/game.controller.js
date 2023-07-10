@@ -70,7 +70,7 @@ const getGame = async (req, res) => {
           include: [
             {
               model: SnakeLadder,
-              as: "snakes_ladders",
+              as: "snakeLadders",
               attributes: ["id", "type", "start", "end"],
             },
           ],

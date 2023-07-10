@@ -1,8 +1,8 @@
-import Game from "./../models/Game";
-import Board from "./../models/Board";
-import User from "./../models/User";
-import SnakeLadder from "./../models/Snake_Ladder";
-import Player from "../models/Player";
+import Game from "./../models/Game.js";
+import Board from "./../models/Board.js";
+import User from "./../models/User.js";
+import SnakeLadder from "./../models/Snake_Ladder.js";
+import Player from "../models/Player.js";
 
 const createGame = async (req, res) => {
   const { creator_id, players_number, current_player, board_id } = req.body;

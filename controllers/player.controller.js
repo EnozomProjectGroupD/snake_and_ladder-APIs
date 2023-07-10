@@ -4,8 +4,22 @@ import {auth} from "../middlewares/auth.js";
 
 const createPlayer = async (req, res) => {
   try {
-    const player = await Player.create(req.body);
-    res.status(200).json({ message: "success", player: player });
+    const userid = req.user.id;
+    console.log( ((await Player.findAll({where: {game_id: req.body.game_id}})).length) )
+    if ( ! await Player.findOne({ where: {user_id: req.user.id, game_id: req.body.game_id}  } )  ){
+      const playernum = (await Player.findAll({where: {game_id: req.body.game_id}})).length
+      const player_order = playernum+1
+      // if (await Player.findAll({ where: {game_id: req.body.game_id} }){
+      //
+      // }
+      const dumy={"user_id": userid, "game_id": req.body.game_id, "player_order": player_order}
+      const player = await Player.create(dumy);
+      res.status(200).json({ message: "success", player: player });
+    }
+    else {
+      res.status(500).json({message: "Player already joined"})
+    }
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

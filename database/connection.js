@@ -14,8 +14,8 @@ const sequelize = new Sequelize(
   }
 );
 
-//const queryInterface = sequelize.getQueryInterface();
-//seed.up(queryInterface, Sequelize);
+// const queryInterface = sequelize.getQueryInterface();
+// seed.up(queryInterface, Sequelize);
 
 
 export default sequelize;

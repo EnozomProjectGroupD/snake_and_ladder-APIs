@@ -5,12 +5,12 @@ import SnakeLadder from "./../models/Snake_Ladder.js";
 import Player from "../models/Player.js";
 
 const createGame = async (req, res) => {
-  const { creator_id, players_number, current_player, board_id } = req.body;
-
-  if (!creator_id || !players_number || !current_player || !board_id)
+  const { players_number, board_id } = req.body;
+  const creator_id = req.user.id;
+  if (!creator_id || !players_number  || !board_id)
     return res.status(400).json({
       error:
-        "Missing required fields you should send creator_id, players_number, current_player, board_id",
+        "Missing required fields you should send creator_id, players_number, board_id",
     });
 
   if (!(await User.findByPk(creator_id)))
@@ -33,7 +33,6 @@ const createGame = async (req, res) => {
       creator_id,
       status: "waiting",
       board_id,
-      current_player,
       players_number,
     });
 

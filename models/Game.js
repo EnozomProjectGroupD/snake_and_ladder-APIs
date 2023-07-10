@@ -24,6 +24,7 @@ const Game = sequelize.define(
     },
     current_player: {
       type: DataTypes.INTEGER,
+      defaultValue: 1,
       allowNull: false,
     },
     players_number: {

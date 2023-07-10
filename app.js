@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import allRoutes from "./routes/index.router.js";
+
 const app = express();
 
 // Middlewares

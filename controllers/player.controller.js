@@ -16,22 +16,23 @@ const movePLayer = async (req, res) => {
     const playerId = req.body.id;
     const player = await Player.findByPk(playerId);
     console.log(player);
-    const newPostion = player.dataValues.position + rollValue;
+    const newPostion = player.position + rollValue;
+    //check if the new position is valid
     if (newPostion <= 100) {
-      player.dataValues.position = newPostion;
+      player.position = newPostion;
     }
     // check if the new position is a ladder or snake
-    const ladderSnakeObj = await checkLadderSnake(player.dataValues.position);
     //if it is a ladder or snake, move the player to the end of the ladder or snake
+    const ladderSnakeObj = await checkLadderSnake(player.position);
     if (ladderSnakeObj) {
-      player.dataValues.position = ladderSnakeObj.dataValues.end;
+      player.position = ladderSnakeObj.end;
     }
-    player.dataValues.updatedAt = new Date();
+    player.updatedAt = new Date();
     Player.update(player, { where: { id: playerId } });
     res.status(200).json({
       message: "success",
       rollValue: rollValue,
-      position: player.dataValues.position,
+      position: player.position,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

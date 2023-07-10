@@ -32,7 +32,7 @@ const updateBoard = async (req, res) => {
 
 const getBoard = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.body.id;
     const board = await Board.findOne({
       where: { id: id },
       attributes: ["id", "Buffer"],
@@ -53,7 +53,7 @@ const getBoard = async (req, res) => {
 const getAllBoards = async (req, res) => {
   try {
     const boards = await Board.findAll();
-    res.status(200).json({ message: "success", boards: boards });
+    res.status(200).json({number:boards.length, message: "success", boards: boards });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

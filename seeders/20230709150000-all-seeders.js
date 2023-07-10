@@ -51,7 +51,7 @@ export default {
       const playerData = {
         game_id: faker.datatype.number({ min: 1, max: 5 }),
         user_id: faker.datatype.number({ min: 1, max: 10 }),
-        position: faker.lorem.words(2),
+        position: faker.datatype.number({ min: 1, max: 100 }),
         player_order: faker.datatype.number({ min: 1, max: 5 }),
         createdAt: new Date(),
         updatedAt: new Date(),

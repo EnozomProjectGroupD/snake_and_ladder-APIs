@@ -208,7 +208,7 @@ const startGame = async (req, res) => {
 
 const updateGame = async (req, res) => {
   const { id } = req.params;
-  const { status, players_number } = req.body;
+  const { players_number } = req.body;
 
   try {
     const game = await Game.findByPk(id);
@@ -228,18 +228,8 @@ const updateGame = async (req, res) => {
         error: "You can only change players_number if the game is waiting",
       });
 
-    if (
-      (status === "playing" && game.status !== "waiting") ||
-      game.players.length < 2
-    )
-      return res.status(400).json({
-        error:
-          "You can only change status to playing if the game is waiting and there are at least 2 players",
-      });
-
     await game.update({
       players_number,
-      status,
     });
 
     return res.status(200).json({

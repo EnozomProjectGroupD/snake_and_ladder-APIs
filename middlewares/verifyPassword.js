@@ -9,7 +9,7 @@ const verifyPassword = (req, res, next) => {
   } else {
     res.status(500).json({
       message:
-        "Password must be at least 8 characters long, conatins at least one uppercase letter, one lowercase letter, one number and one special character",
+        "Password must be at least 8 characters long, contains at least one uppercase letter, one lowercase letter, one number and one special character",
     });
   }
 

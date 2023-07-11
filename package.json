@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/EnozomProjectGroupD/snake_and_ladder-APIs#readme",
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -35,7 +34,7 @@
     "socket.io": "^4.7.1"
   },
   "devDependencies": {
-    "faker": "^6.6.6",
+    "@faker-js/faker": "^8.0.2",
     "nodemon": "^2.0.22",
     "sequelize-cli": "^6.6.1"
   }

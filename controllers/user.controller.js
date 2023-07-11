@@ -46,8 +46,27 @@ const logIn = async (req, res) => {
     res.status(500).json({ message: "Failed to log in" });
   }
 };
+const logOut = async (req, res) => {
+  // const token  = req.headers.authorization.split(" ")[1];
+  // console.log(token)
+  // console.log(req.headers);
+  if (req.headers.authorization) {
+    delete req.headers.authorization;
+  }
+  // console.log(req.headers);
+
+  try {
+    //Add the code here...
+    res.json({ message: "Logout successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to log out" });
+  }
+};
+
 
 export default {
   signUp,
   logIn,
+  logOut,
 };

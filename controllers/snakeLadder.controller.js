@@ -1,25 +1,25 @@
 import SnakeLadder from "../models/Snake_Ladder.js";
 import Board from "../models/Board.js";
 
-const getSnakeLadder = async (req, res) => {
-  const position = req.body.position;
-  try {
-    const snakeLadder = await SnakeLadder.findOne({
-      where: { start: position },
-    });
-    res.status(200).json({ tile: snakeLadder });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-const getAllSnakeLadders = async (req, res) => {
-  try {
-    const snakeLadders = await SnakeLadder.findAll();
-    res.status(200).json({ snakeLadders: snakeLadders });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// const getSnakeLadder = async (req, res) => {
+//   const position = req.body.position;
+//   try {
+//     const snakeLadder = await SnakeLadder.findOne({
+//       where: { start: position },
+//     });
+//     res.status(200).json({ tile: snakeLadder });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+// const getAllSnakeLadders = async (req, res) => {
+//   try {
+//     const snakeLadders = await SnakeLadder.findAll();
+//     res.status(200).json({ snakeLadders: snakeLadders });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 const addSnakeLadder = async (req, res) => {
   try {

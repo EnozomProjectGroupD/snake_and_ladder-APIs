@@ -36,7 +36,6 @@ export default {
         creator_id: faker.datatype.number({ min: 1, max: 10 }),
         status: faker.helpers.arrayElement(["waiting", "playing", "finished"]),
         board_id: faker.datatype.number({ min: 1, max: 5 }),
-        current_player: faker.datatype.number({ min: 1, max: 5 }),
         players_number: faker.datatype.number({ min: 2, max: 4 }),
         createdAt: new Date(),
         updatedAt: new Date(),

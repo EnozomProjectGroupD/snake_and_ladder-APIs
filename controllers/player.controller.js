@@ -63,7 +63,10 @@ const joinPlayer = async (req, res) => {
 const leavePlayer = async (req, res) => {
   try {
     const user_id = req.userId;
-    const player = await Player.findOne({ where: { user_id } });
+    const gameId = req.body.gameId;
+    const player = await Player.findOne({
+      where: { user_id, game_id: gameId },
+    });
     if (!player) {
       return res.status(404).json({ message: "Player not found" });
     }

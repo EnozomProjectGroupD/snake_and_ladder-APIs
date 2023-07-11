@@ -167,6 +167,10 @@ const startGame = async (req, res) => {
   try {
     const game = await Game.findByPk(id);
 
+    const playersNumber = await Player.count({
+      where: { game_id: id, status: "inGame" },
+    });
+
     if (!game)
       return res.status(404).json({
         error: "Game not found",
@@ -182,7 +186,7 @@ const startGame = async (req, res) => {
         error: "You can only start the game if the game is waiting",
       });
 
-    if (game.players_number < 2)
+    if (playersNumber < 2)
       return res.status(400).json({
         error: "You can only start the game if there are at least 2 players",
       });

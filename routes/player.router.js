@@ -6,5 +6,6 @@ const playerRouter = Router();
 playerRouter.post("/create", auth, playerController.joinPlayer);
 playerRouter.post("/move", auth, playerController.movePLayer);
 playerRouter.get("/position", auth, playerController.getPosition);
+playerRouter.get("/leavePlayer", auth, playerController.getPosition);
 
 export default playerRouter;

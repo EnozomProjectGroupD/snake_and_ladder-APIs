@@ -12,14 +12,15 @@ import Board from "../models/Board.js";
 //     res.status(500).json({ message: error.message });
 //   }
 // };
-// const getAllSnakeLadders = async (req, res) => {
-//   try {
-//     const snakeLadders = await SnakeLadder.findAll();
-//     res.status(200).json({ snakeLadders: snakeLadders });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+
+const getAllSnakeLadders = async (req, res) => {
+  try {
+    const snakeLadders = await SnakeLadder.findAll();
+    res.status(200).json({ snakeLadders: snakeLadders });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const addSnakeLadder = async (req, res) => {
   try {
@@ -53,7 +54,6 @@ const addSnakeLadder = async (req, res) => {
   }
 };
 export default {
-  getSnakeLadder,
   getAllSnakeLadders,
   addSnakeLadder,
 };

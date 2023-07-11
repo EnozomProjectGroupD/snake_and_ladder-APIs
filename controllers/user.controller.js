@@ -49,6 +49,10 @@ const logIn = async (req, res) => {
   }
 };
 
+// #####
+// log out
+// #####
+
 const logOut = async (req, res) => {
   // const token  = req.headers.authorization.split(" ")[1];
   // console.log(token)
@@ -61,8 +65,22 @@ const logOut = async (req, res) => {
   }
 };
 
+// #####
+// get user
+// #####
+
+const getUser = async (req, res) => {
+  const userId = req.userId;
+  if (!userId){
+    res.json({message: "No user found"})
+  }else {
+    res.json({"user_id": userId})
+  }
+}
+
 export default {
   signUp,
   logIn,
   logOut,
+  getUser,
 };

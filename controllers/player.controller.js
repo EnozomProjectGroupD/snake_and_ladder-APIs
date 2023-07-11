@@ -5,9 +5,6 @@ import { auth } from "../middlewares/auth.js";
 const createPlayer = async (req, res) => {
   try {
     const userid = req.user.id;
-    console.log(
-      (await Player.findAll({ where: { game_id: req.body.game_id } })).length
-    );
     if (
       !(await Player.findOne({
         where: { user_id: req.user.id, game_id: req.body.game_id },
@@ -37,7 +34,6 @@ const movePLayer = async (req, res) => {
     const rollValue = Math.floor(Math.random() * 6) + 1;
     const playerId = req.body.id;
     const player = await Player.findByPk(playerId);
-    console.log(player);
     const newPostion = player.position + rollValue;
     //check if the new position is valid
     if (newPostion <= 100) {
@@ -65,7 +61,6 @@ const getPosition = async (req, res) => {
   try {
     const user = req.user;
     const player = await Player.findOne({where: {user_id: user.id}});
-    console.log(player);
 
     res.status(200).json({ position: player.position });
   } catch (error) {

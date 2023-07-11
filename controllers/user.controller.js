@@ -9,7 +9,6 @@ const signUp = async (req, res) => {
   const { name, username, password } = req.body;
   try {
     const user = await User.create({ name, username, password });
-    console.log(user.id);
 
     const token = user.generateToken();
 
@@ -33,10 +32,8 @@ const logIn = async (req, res) => {
       res.status(404).json({ message: "User not found. Please sign up" });
       return;
     }
-    console.log(user.password);
     // const isPasswordValid = bcrypt.compareSync(password, user.password);
     const isPasswordValid = user.validPassword(password);
-    console.log(isPasswordValid);
     if (!isPasswordValid) {
       res.status(401).json({ message: "Invalid password" });
       return;

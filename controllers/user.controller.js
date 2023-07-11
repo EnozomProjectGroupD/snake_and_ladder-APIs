@@ -52,15 +52,9 @@ const logOut = async (req, res) => {
   // console.log(req.headers);
   if (req.headers.authorization) {
     delete req.headers.authorization;
-  }
-  // console.log(req.headers);
-
-  try {
-    //Add the code here...
     res.json({ message: "Logout successful" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to log out" });
+  }else{
+    res.json({message: "No user login"})
   }
 };
 

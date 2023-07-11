@@ -6,27 +6,34 @@ import Player from "../models/Player.js";
 
 const createGame = async (req, res) => {
   const { players_number, board_id } = req.body;
-  const creator_id = req.user.id;
-  if (!creator_id || !players_number || !board_id)
+  const creator_id = req.userId;
+
+  if (!creator_id || !players_number || !board_id) {
     return res.status(400).json({
       error:
-        "Missing required fields you should send creator_id, players_number, board_id",
+        "Missing required fields. Please provide creator_id, players_number, and board_id.",
     });
+  }
 
-  if (!(await User.findByPk(creator_id)))
+  const creator = await User.findByPk(creator_id);
+  if (!creator) {
     return res.status(400).json({
-      error: "creator_id is not valid",
+      error: "Invalid creator_id. Please provide a valid creator_id.",
     });
+  }
 
-  if (!(await Board.findByPk(board_id)))
+  const board = await Board.findByPk(board_id);
+  if (!board) {
     return res.status(400).json({
-      error: "board_id is not valid",
+      error: "Invalid board_id. Please provide a valid board_id.",
     });
+  }
 
-  if (players_number < 2 || players_number > 10)
+  if (players_number < 2 || players_number > 10) {
     return res.status(400).json({
       error: "players_number should be between 2 and 10",
     });
+  }
 
   try {
     const game = await Game.create({
@@ -34,6 +41,12 @@ const createGame = async (req, res) => {
       status: "waiting",
       board_id,
       players_number,
+    });
+
+    await Player.create({
+      game_id: game.id,
+      user_id: creator_id,
+      player_order: 1,
     });
 
     return res.status(201).json({

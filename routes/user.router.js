@@ -1,8 +1,10 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller.js";
-import verifyPassword from "../middlewares/verifyPassword.js";
+import verifySignUp from "./../middlewares/verifySignUp";
+
 const router = Router();
-router.post("/sign-up", verifyPassword, userController.signUp);
+
+router.post("/sign-up", verifySignUp, userController.signUp);
 router.post("/log-in", userController.logIn);
 
 export default router;

@@ -80,7 +80,7 @@ const movePLayer = async (req, res) => {
   try {
     const rollValue = Math.floor(Math.random() * 6) + 1;
     const userId = req.userId;
-    const gameId = req.params.gameId;
+    const gameId = req.body.gameId;
 
     const game = await Game.findOne({ where: { id: gameId } });
     if (!game) {

@@ -26,7 +26,6 @@ const Player = sequelize.define("Player", {
   },
   status: {
     type: DataTypes.STRING,
-    allowNull: false,
     toBe: ["inGame", "outGame"],
   },
 });

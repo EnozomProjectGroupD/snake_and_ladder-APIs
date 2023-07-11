@@ -34,7 +34,18 @@ const joinPlayer = async (req, res) => {
     if (player) {
       return res.status(400).json({ message: "Player already joined" });
     }
-
+    const joinedPlayer = await Player.findOne({
+      where: { user_id, game_id, status: "outGame" },
+    });
+    if (joinedPlayer) {
+      await joinedPlayer.update(
+        {
+          status: "inGame",
+        },
+        { where: { id: joinedPlayer.id } }
+      );
+      return res.status(200).json({ message: "success", player: joinedPlayer });
+    }
     const numberOfPlayers = await Player.count({ where: { game_id } });
 
     if (numberOfPlayers >= game.players_number) {
@@ -63,16 +74,21 @@ const joinPlayer = async (req, res) => {
 const leavePlayer = async (req, res) => {
   try {
     const user_id = req.userId;
-    const gameId = req.body.gameId;
+    console.log(user_id);
     const player = await Player.findOne({
-      where: { user_id, game_id: gameId },
+      where: { user_id, status: "inGame" },
     });
+    console.log(player);
     if (!player) {
       return res.status(404).json({ message: "Player not found" });
     }
-    player.status = "outGame";
-    await Player.update(player, { where: { id: player.id } });
-    res.status(200).json({ message: "success" });
+    await player.update(
+      {
+        status: "outGame",
+      },
+      { where: { id: player.id } }
+    );
+    res.status(200).json({ message: "success", player: player });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -81,7 +97,7 @@ const leavePlayer = async (req, res) => {
 // function to move player
 const movePLayer = async (req, res) => {
   try {
-    const rollValue = Math.floor(Math.random() * 6) + 1;
+    const rollValue = 2;
     const userId = req.userId;
     const gameId = req.body.gameId;
 
@@ -111,16 +127,20 @@ const movePLayer = async (req, res) => {
     }
     // check if the new position is a ladder or snake
     //if it is a ladder or snake, move the player to the end of the ladder or snake
-    const ladderSnakeObj = await checkLadderSnake(player.position);
-    if (ladderSnakeObj) {
-      player.position = ladderSnakeObj.end;
-    }
+    // const ladderSnakeObj = await checkLadderSnake(player.position);
+    // if (ladderSnakeObj) {
+    //   player.position = ladderSnakeObj.end;
+    // }
 
-    await Player.update(player, { where: { id: player.id } });
+    await player.update(player, { where: { id: player.id } });
+
+    console.log(newP);
+
+    console.log(player.position);
 
     if (player.position === 100) {
       game.status = "finished";
-      await Game.update(game, { where: { id: game.id } });
+      await game.update(game, { where: { id: game.id } });
       return res.status(200).json({
         message: "success",
         rollValue: rollValue,
@@ -131,7 +151,7 @@ const movePLayer = async (req, res) => {
 
     game.current_player = (currentPlayer % game.players_number) + 1;
 
-    await Game.update(game, { where: { id: game.id } });
+    await game.update(game, { where: { id: game.id } });
 
     res.status(200).json({
       message: "success",

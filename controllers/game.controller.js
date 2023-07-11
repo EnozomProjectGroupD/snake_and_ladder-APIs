@@ -46,6 +46,7 @@ const createGame = async (req, res) => {
     await Player.create({
       game_id: game.id,
       user_id: creator_id,
+      status: "inGame",
       player_order: 1,
     });
 

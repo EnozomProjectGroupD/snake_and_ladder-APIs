@@ -64,8 +64,7 @@ const movePLayer = async (req, res) => {
 const getPosition = async (req, res) => {
   try {
     const user = req.user;
-    const playerId = user.id;
-    const player = await Player.findByPk(playerId);
+    const player = await Player.findOne({where: {user_id: user.id}});
     console.log(player);
 
     res.status(200).json({ position: player.position });

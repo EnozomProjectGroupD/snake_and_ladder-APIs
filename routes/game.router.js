@@ -6,6 +6,7 @@ const gameRouter = Router();
 gameRouter.post("/create", auth, gameController.createGame);
 gameRouter.get("/get/:id", auth, gameController.getGame);
 gameRouter.get("/get-all", auth, gameController.getGames);
+gameRouter.get("/start-game/:id", auth, gameController.startGame);
 gameRouter.put("/update/:id", auth, gameController.updateGame);
 
 export default gameRouter;

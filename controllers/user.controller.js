@@ -15,7 +15,9 @@ const signUp = async (req, res) => {
     res.json({ message: "User created successfully", user, token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create user, username is already used" });
+    res
+      .status(500)
+      .json({ message: "Failed to create user, username is already used" });
   }
 };
 
@@ -46,6 +48,7 @@ const logIn = async (req, res) => {
     res.status(500).json({ message: "Failed to log in" });
   }
 };
+
 const logOut = async (req, res) => {
   // const token  = req.headers.authorization.split(" ")[1];
   // console.log(token)
@@ -53,11 +56,10 @@ const logOut = async (req, res) => {
   if (req.headers.authorization) {
     delete req.headers.authorization;
     res.json({ message: "Logout successful" });
-  }else{
-    res.json({message: "No user login"})
+  } else {
+    res.json({ message: "No user login" });
   }
 };
-
 
 export default {
   signUp,

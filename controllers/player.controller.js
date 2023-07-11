@@ -19,18 +19,24 @@ const joinPlayer = async (req, res) => {
     }
 
     const game = await Game.findOne({ where: { id: game_id } });
+
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
 
+    if (game.status !== "waiting") {
+      return res.status(400).json({ message: "Game is not waiting" });
+    }
+
     const player = await Player.findOne({
-      where: { user_id, game_id },
+      where: { user_id, game_id, status: "inGame" },
     });
     if (player) {
       return res.status(400).json({ message: "Player already joined" });
     }
 
     const numberOfPlayers = await Player.count({ where: { game_id } });
+
     if (numberOfPlayers >= game.players_number) {
       return res.status(400).json({ message: "Game is full" });
     }
@@ -38,12 +44,32 @@ const joinPlayer = async (req, res) => {
     const player_order = numberOfPlayers + 1;
 
     const newPlayer = await Player.create({
+      status: "inGame",
       game_id,
       user_id,
       player_order,
     });
 
+    if (newPlayer.player_order === game.players_number) {
+      await Game.update({ status: "playing" }, { where: { id: game_id } });
+    }
+
     res.status(200).json({ message: "success added", player: newPlayer });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const leavePlayer = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    const player = await Player.findOne({ where: { user_id } });
+    if (!player) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+    player.status = "outGame";
+    await Player.update(player, { where: { id: player.id } });
+    res.status(200).json({ message: "success" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -53,10 +79,30 @@ const joinPlayer = async (req, res) => {
 const movePLayer = async (req, res) => {
   try {
     const rollValue = Math.floor(Math.random() * 6) + 1;
-    const playerId = req.body.id;
-    const player = await Player.findByPk(playerId);
+    const userId = req.userId;
+    const gameId = req.params.gameId;
+
+    const game = await Game.findOne({ where: { id: gameId } });
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+
+    if (game.status !== "playing") {
+      return res.status(400).json({ message: "Game is not playing" });
+    }
+
+    const currentPlayer = game.current_player;
+
+    const player = await Player.findOne({
+      where: { user_id: userId, game_id: gameId, status: "inGame" },
+    });
+
+    if (player.player_order !== currentPlayer) {
+      return res.status(400).json({ message: "Not your turn" });
+    }
+
     const newPostion = player.position + rollValue;
-    //check if the new position is valid
+
     if (newPostion <= 100) {
       player.position = newPostion;
     }
@@ -66,8 +112,24 @@ const movePLayer = async (req, res) => {
     if (ladderSnakeObj) {
       player.position = ladderSnakeObj.end;
     }
-    player.updatedAt = new Date();
-    Player.update(player, { where: { id: playerId } });
+
+    await Player.update(player, { where: { id: player.id } });
+
+    if (player.position === 100) {
+      game.status = "finished";
+      await Game.update(game, { where: { id: game.id } });
+      return res.status(200).json({
+        message: "success",
+        rollValue: rollValue,
+        player: player,
+        game: game,
+      });
+    }
+
+    game.current_player = (currentPlayer % game.players_number) + 1;
+
+    await Game.update(game, { where: { id: game.id } });
+
     res.status(200).json({
       message: "success",
       rollValue: rollValue,
@@ -77,6 +139,7 @@ const movePLayer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // function to return player position
 const getPosition = async (req, res) => {
   try {
@@ -104,4 +167,5 @@ export default {
   joinPlayer,
   movePLayer,
   getPosition,
+  leavePlayer,
 };

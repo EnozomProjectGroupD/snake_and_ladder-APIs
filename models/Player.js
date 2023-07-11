@@ -1,7 +1,7 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../database/connection.js';
+import { DataTypes } from "sequelize";
+import sequelize from "../database/connection.js";
 
-const Player = sequelize.define('Player', {
+const Player = sequelize.define("Player", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -23,6 +23,11 @@ const Player = sequelize.define('Player', {
   player_order: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    toBe: ["inGame", "outGame"],
   },
 });
 

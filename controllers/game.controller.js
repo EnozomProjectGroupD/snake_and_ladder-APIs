@@ -8,6 +8,16 @@ const createGame = async (req, res) => {
   const { players_number, board_id } = req.body;
   const creator_id = req.userId;
 
+  const ifPlayerExist = await Player.findOne({
+    where: { user_id: creator_id, status: "inGame" },
+  });
+
+  if (ifPlayerExist) {
+    return res.status(400).json({
+      error: "You are already in a game. You can't create a new game.",
+    });
+  }
+
   if (!creator_id || !players_number || !board_id) {
     return res.status(400).json({
       error:

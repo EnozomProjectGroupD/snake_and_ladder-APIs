@@ -16,7 +16,7 @@ const signUp = async (req, res) => {
     res.json({ message: "User created successfully", user, token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create user", error });
+    res.status(500).json({ message: "Failed to create user, username is already used" });
   }
 };
 

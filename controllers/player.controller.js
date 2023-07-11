@@ -1,33 +1,54 @@
+import Game from "../models/Game.js";
 import Player from "../models/Player.js";
 import LadderSnake from "../models/Snake_Ladder.js";
-import { auth } from "../middlewares/auth.js";
+import User from "../models/User.js";
 
-const createPlayer = async (req, res) => {
+const joinPlayer = async (req, res) => {
   try {
-    const userid = req.user.id;
-    if (
-      !(await Player.findOne({
-        where: { user_id: req.user.id, game_id: req.body.game_id },
-      }))
-    ) {
-      const playernum = (
-        await Player.findAll({ where: { game_id: req.body.game_id } })
-      ).length;
-      const player_order = playernum + 1;
-      const dumy = {
-        user_id: userid,
-        game_id: req.body.game_id,
-        player_order: player_order,
-      };
-      const player = await Player.create(dumy);
-      res.status(200).json({ message: "success", player: player });
-    } else {
-      res.status(500).json({ message: "Player already joined" });
+    const { game_id } = req.body;
+    const user_id = req.userId;
+    if (!game_id || !user_id) {
+      return res
+        .status(400)
+        .json({ message: "game_id and user_id are required" });
     }
+
+    const user = await User.findOne({ where: { id: user_id } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const game = await Game.findOne({ where: { id: game_id } });
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+
+    const player = await Player.findOne({
+      where: { user_id, game_id },
+    });
+    if (player) {
+      return res.status(400).json({ message: "Player already joined" });
+    }
+
+    const numberOfPlayers = await Player.count({ where: { game_id } });
+    if (numberOfPlayers >= game.players_number) {
+      return res.status(400).json({ message: "Game is full" });
+    }
+
+    const player_order = numberOfPlayers + 1;
+
+    const newPlayer = await Player.create({
+      game_id,
+      user_id,
+      player_order,
+    });
+
+    res.status(200).json({ message: "success added", player: newPlayer });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 // function to move player
 const movePLayer = async (req, res) => {
   try {
@@ -60,7 +81,7 @@ const movePLayer = async (req, res) => {
 const getPosition = async (req, res) => {
   try {
     const user = req.user;
-    const player = await Player.findOne({where: {user_id: user.id}});
+    const player = await Player.findOne({ where: { user_id: user.id } });
 
     res.status(200).json({ position: player.position });
   } catch (error) {
@@ -80,7 +101,7 @@ const checkLadderSnake = async (position) => {
 };
 
 export default {
-  createPlayer,
+  joinPlayer,
   movePLayer,
   getPosition,
 };

@@ -6,7 +6,7 @@ import fs from "fs";
 const createBoard = async (req, res) => {
   try {
     const imageFile = req.file;
-    // console.log(imageFile.buffer);
+    console.log(imageFile);
     const board = await Board.create({
       Buffer: imageFile.buffer,
       fileExtension: imageFile.originalname.split(".")[1],
@@ -36,7 +36,7 @@ const getBoard = async (req, res) => {
     const id = req.params.id;
     const board = await Board.findOne({
       where: { id: id },
-      attributes: ["id", "Buffer" , "fileExtension"],
+      attributes: ["id", "Buffer", "fileExtension"],
       include: [
         {
           model: SnakeLadder,
@@ -57,6 +57,18 @@ const getAllBoards = async (req, res) => {
     res.status(200).json({ message: "success", boards: boards });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const addBoard = async (file) => {
+  try {
+    const board = await Board.create({
+      Buffer: file.buffer,
+      fileExtension: file.originalname.split(".")[1],
+    });
+    return board;
+  } catch (error) {
+    console.log(error);
   }
 };
 

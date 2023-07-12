@@ -1,5 +1,9 @@
 "use strict";
 import { faker } from "@faker-js/faker";
+import fs from "fs";
+import path from "path";
+
+const __dirname = path.resolve();
 
 export default {
   up: async (queryInterface, Sequelize) => {
@@ -20,20 +24,19 @@ export default {
     // Board Seeder
     const boardsData = [];
     for (let i = 0; i < 5; i++) {
-      // from assets\images\board1.png to assets\images\board5.png store the images as a buffer and the file extension
       const imageFile = fs.readFileSync(
-        path.join(__dirname, `../assets/images/board${i + 1}.png`)
+        path.join(__dirname, `./assets/images/board${i + 1}.png`)
       );
+      const buffer = toString(Buffer.from(imageFile));
       const boardData = {
-        Buffer: imageFile.buffer,
-        fileExtension: imageFile.originalname.split(".")[1],
+        Buffer: buffer,
+        fileExtension: "png",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
       boardsData.push(boardData);
     }
     await queryInterface.bulkInsert("Boards", boardsData, {});
-
     // Game Seeder
     const gamesData = [];
     for (let i = 0; i < 5; i++) {

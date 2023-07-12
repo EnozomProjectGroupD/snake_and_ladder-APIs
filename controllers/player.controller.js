@@ -160,15 +160,28 @@ const movePLayer = async (req, res) => {
       });
     }
 
-    const newPayer = (currentPlayer % numberOfPlayers) + 1;
-
-    await game.update({ current_player: newPayer });
-
-    res.status(200).json({
-      message: "success",
-      rollValue: rollValue,
-      position: player.position,
+    var newPlayerOrder = (currentPlayer % numberOfPlayers) + 1;
+    const nextPlayer = await Player.findOne({
+      where: { game_id: gameId, player_order: newPlayerOrder },
     });
+    if (nextPlayer.status === "outGame") {
+      newPlayerOrder = (newPlayerOrder % numberOfPlayers) + 1;
+      await game.update({
+        current_player: newPlayerOrder,
+      });
+      return res.status(200).json({
+        message: "success",
+        rollValue: rollValue,
+        position: player.position,
+      });
+    } else {
+      await game.update({ current_player: newPlayerOrder });
+      res.status(200).json({
+        message: "success",
+        rollValue: rollValue,
+        position: player.position,
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

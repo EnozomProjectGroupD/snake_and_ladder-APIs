@@ -12,14 +12,13 @@ const createTables = () => {
   //   .sync({ force: true })
   //   .then(() => {
   //     console.log("Tables have been created");
+  //     const queryInterface = sequelize.getQueryInterface();
+  //     seed.up(queryInterface, Sequelize);
   //   })
   //   .catch((err) => {
   //     console.log(err);
   //   });
 };
-
-// const queryInterface = sequelize.getQueryInterface();
-// seed.up(queryInterface, Sequelize);
 
 Game.belongsTo(User, { foreignKey: "creator_id", as: "creator" });
 User.hasMany(Game, { foreignKey: "creator_id", as: "games" });

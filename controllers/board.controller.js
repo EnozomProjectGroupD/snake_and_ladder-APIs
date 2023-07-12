@@ -36,7 +36,7 @@ const getBoard = async (req, res) => {
     const id = req.params.id;
     const board = await Board.findOne({
       where: { id: id },
-      attributes: ["id", "Buffer"],
+      attributes: ["id", "Buffer" , "fileExtension"],
       include: [
         {
           model: SnakeLadder,

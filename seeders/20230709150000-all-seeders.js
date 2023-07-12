@@ -20,8 +20,13 @@ export default {
     // Board Seeder
     const boardsData = [];
     for (let i = 0; i < 5; i++) {
+      // from assets\images\board1.png to assets\images\board5.png store the images as a buffer and the file extension
+      const imageFile = fs.readFileSync(
+        path.join(__dirname, `../assets/images/board${i + 1}.png`)
+      );
       const boardData = {
-        Buffer: faker.lorem.words(3),
+        Buffer: imageFile.buffer,
+        fileExtension: imageFile.originalname.split(".")[1],
         createdAt: new Date(),
         updatedAt: new Date(),
       };

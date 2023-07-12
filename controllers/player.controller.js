@@ -173,6 +173,7 @@ const movePLayer = async (req, res) => {
         message: "success",
         rollValue: rollValue,
         position: player.position,
+        PlayerOrder : currentPlayer
       });
     } else {
       await game.update({ current_player: newPlayerOrder });
@@ -180,6 +181,7 @@ const movePLayer = async (req, res) => {
         message: "success",
         rollValue: rollValue,
         position: player.position,
+        PlayerOrder : currentPlayer,
       });
     }
   } catch (error) {

@@ -27,7 +27,7 @@ export default {
       const imageFile = fs.readFileSync(
         path.join(__dirname, `./assets/images/board${i + 1}.png`)
       );
-      const buffer = toString(imageFile.buffer);
+      const buffer = imageFile.toString("base64");
       const boardData = {
         Buffer: buffer,
         fileExtension: "png",

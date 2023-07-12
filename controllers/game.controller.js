@@ -3,6 +3,7 @@ import Board from "./../models/Board.js";
 import User from "./../models/User.js";
 import SnakeLadder from "./../models/Snake_Ladder.js";
 import Player from "../models/Player.js";
+import { io } from "../config/socker.js";
 
 const createGame = async (req, res) => {
   const { players_number, board_id } = req.body;
@@ -53,12 +54,15 @@ const createGame = async (req, res) => {
       players_number,
     });
 
-    await Player.create({
+    const player = await Player.create({
       game_id: game.id,
       user_id: creator_id,
       status: "inGame",
       player_order: 1,
     });
+
+    // Emit socket event to client-side to join the game room
+    io.to(game.id).emit("player-joined", { player: player });
 
     return res.status(201).json({
       message: "Game created successfully",
@@ -195,6 +199,9 @@ const startGame = async (req, res) => {
       status: "playing",
     });
 
+    // Emit 'game-started' event to all connected clients
+    io.emit("game-started", { gameId: game.id });
+
     return res.status(200).json({
       message: "Game started successfully",
       game,
@@ -241,6 +248,9 @@ const updateGame = async (req, res) => {
       players_number,
       status,
     });
+
+    // Emit 'game-updated' event to all connected clients
+    io.emit("game-updated", { gameId: game.id });
 
     return res.status(200).json({
       message: "Game updated successfully",

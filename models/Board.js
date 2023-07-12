@@ -11,6 +11,10 @@ const Board = sequelize.define("Board", {
     type: DataTypes.BLOB("long"),
     allowNull: false,
   },
+  fileExtension: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 });
 
 export default Board;

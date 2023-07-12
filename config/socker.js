@@ -1,27 +1,26 @@
+import { consola } from "consola";
 import { Server } from "socket.io";
 
+let io;
+
 export const socker = (server) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: "*",
     },
   });
 
-  io.on("connection", (socket) => {
-    console.log("a user connected");
+  // io.on("connection", (socket) => {
+  //   consola.success("user connected");
 
-    socket.on("join", (room) => {
-      console.log("join room", room);
-      socket.join(room);
-    });
+  //   socket.on("disconnect", () => {
+  //     consola.success("user disconnected");
+  //   });
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
-    });
-
-    socket.on("updateGame", (data) => {
-      console.log("updateGame", data);
-      io.to(data.room).emit("updateGame", data);
-    });
-  });
+  //   socket.on("message", (data) => {
+  //     consola.info("message: " + data);
+  //   });
+  // });
 };
+
+export { io };

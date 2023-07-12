@@ -33,8 +33,7 @@ const updateBoard = async (req, res) => {
 
 const getBoard = async (req, res) => {
   try {
-
-    const id = req.body.id;
+    const id = req.params.id;
     const board = await Board.findOne({
       where: { id: id },
       attributes: ["id", "Buffer"],

@@ -215,7 +215,7 @@ const startGame = async (req, res) => {
 
 const updateGame = async (req, res) => {
   const { id } = req.params;
-  const { status, players_number } = req.body;
+  const { players_number } = req.body;
 
   try {
     const game = await Game.findByPk(id);
@@ -235,18 +235,8 @@ const updateGame = async (req, res) => {
         error: "You can only change players_number if the game is waiting",
       });
 
-    if (
-      (status === "playing" && game.status !== "waiting") ||
-      game.players.length < 2
-    )
-      return res.status(400).json({
-        error:
-          "You can only change status to playing if the game is waiting and there are at least 2 players",
-      });
-
     await game.update({
       players_number,
-      status,
     });
 
     // Emit 'game-updated' event to all connected clients
@@ -263,10 +253,43 @@ const updateGame = async (req, res) => {
   }
 };
 
+const getWinner = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const game = await Game.findByPk(id);
+    if (!game)
+      return res.status(404).json({
+        error: "Game not found",
+      });
+    if (game.status !== "finished") {
+      return res.status(400).json({
+        error: "Game is not finished yet",
+      });
+    }
+    const winner = await Player.findOne({
+      where: { game_id: id, position: 100 },
+    });
+    if (!winner) {
+      return res.status(400).json({
+        error: "No winner",
+      });
+    }
+    return res.status(200).json({
+      winner,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 export default {
   createGame,
   getGame,
   getGames,
   updateGame,
   startGame,
+  getWinner,
 };

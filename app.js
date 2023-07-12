@@ -17,11 +17,6 @@ app.use(
     origin: "*",
   })
 );
-
-
-seedBoard(0);
-seedSnakeLadder(0 , 0)
-
 app.use("/api", allRoutes);
 
 export default app;

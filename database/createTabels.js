@@ -4,6 +4,7 @@ import Game from "../models/Game.js";
 import Player from "../models/Player.js";
 import Board from "../models/Board.js";
 import SnakeLadder from "../models/Snake_Ladder.js";
+import seed from "../seeders/20230709150000-all-seeders.js";
 
 const createTables = () => {
   // sequelize
@@ -15,6 +16,11 @@ const createTables = () => {
   //     console.log(err);
   //   });
 };
+
+
+// const queryInterface = sequelize.getQueryInterface();
+// seed.up(queryInterface, Sequelize);
+
 
 Game.belongsTo(User, { foreignKey: "creator_id", as: "creator" });
 User.hasMany(Game, { foreignKey: "creator_id", as: "games" });

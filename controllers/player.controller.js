@@ -3,6 +3,8 @@ import Game from "../models/Game.js";
 import Player from "../models/Player.js";
 import LadderSnake from "../models/Snake_Ladder.js";
 import User from "../models/User.js";
+import { io } from "../config/socker.js";
+
 
 const joinPlayer = async (req, res) => {
   try {
@@ -64,7 +66,13 @@ const joinPlayer = async (req, res) => {
 
     if (newPlayer.player_order === game.players_number) {
       await Game.update({ status: "playing" }, { where: { id: game_id } });
+
+      // Emit 'game-started' event to all connected clients
+      io.emit("game-started", { gameId: game.id });
     }
+
+    // Emit 'player-joined' event to all connected clients in the game
+    io.to(game_id).emit("player-joined", { player: newPlayer });
 
     res.status(200).json({ message: "success added", player: newPlayer });
   } catch (error) {
@@ -83,6 +91,8 @@ const leavePlayer = async (req, res) => {
     if (!player) {
       return res.status(404).json({ message: "Player not found" });
     }
+    // Emit 'player-left' event to all connected clients in the game
+    io.to(gameId).emit("player-left", { playerId: player.id });
     await player.update(
       {
         status: "outGame",
@@ -111,7 +121,7 @@ const leavePlayer = async (req, res) => {
 };
 
 // function to move player
-const movePLayer = async (req, res) => {
+const movePlayer = async (req, res) => {
   try {
     const rollValue = Math.floor(Math.random() * 6) + 1;
     const userId = req.userId;
@@ -135,10 +145,10 @@ const movePLayer = async (req, res) => {
       return res.status(400).json({ message: "Not your turn" });
     }
 
-    const newPostion = player.position + rollValue;
+    const newPosition = player.position + rollValue;
 
-    if (newPostion <= 100) {
-      player.position = newPostion;
+    if (newPosition <= 100) {
+      player.position = newPosition;
     }
     // check if the new position is a ladder or snake
     //if it is a ladder or snake, move the player to the end of the ladder or snake
@@ -151,14 +161,28 @@ const movePLayer = async (req, res) => {
 
     if (player.position === 100) {
       game.status = "finished";
+      // Emit 'game-finished' event to all connected clients in the game
+      io.to(gameId).emit("game-finished", { game });
+
       await game.update(game, { where: { id: game.id } });
       return res.status(200).json({
         message: "success",
-        rollValue: rollValue,
-        player: player,
-        game: game,
+        rollValue,
+        player,
+        game,
       });
     }
+
+    game.current_player = (currentPlayer % game.players_number) + 1;
+
+    await Game.update(game, { where: { id: game.id } });
+
+    // Emit 'player-moved' event to all connected clients in the game
+    io.to(gameId).emit("player-moved", {
+      rollValue,
+      position: player.position,
+    });
+
 
     var newPlayerOrder = (currentPlayer % numberOfPlayers) + 1;
     const nextPlayer = await Player.findOne({
@@ -200,6 +224,7 @@ const getPosition = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // function to check if the new position is a ladder or snake
 const checkLadderSnake = async (position) => {
   if (!position || position > 100) {
@@ -214,7 +239,7 @@ const checkLadderSnake = async (position) => {
 
 export default {
   joinPlayer,
-  movePLayer,
+  movePlayer,
   getPosition,
   leavePlayer,
 };

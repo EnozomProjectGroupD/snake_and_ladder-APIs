@@ -9,6 +9,7 @@ const createBoard = async (req, res) => {
     // console.log(imageFile.buffer);
     const board = await Board.create({
       Buffer: imageFile.buffer,
+      fileExtension: imageFile.originalname.split(".")[1],
     });
     res
       .status(201)

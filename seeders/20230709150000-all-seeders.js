@@ -19,7 +19,7 @@ export default {
       const userData = {
         name: faker.person.fullName(),
         username: `user${i + 1}`,
-        password: "1@Aaaaaa",
+        password: "$2b$10$hR2m4u/ELOTdivIEkvVNEedXEnPIT57sF6RloZpgzWEY.ffic1N/O", // 1@Aaaaaa
         createdAt: new Date(),
         updatedAt: new Date(),
       };

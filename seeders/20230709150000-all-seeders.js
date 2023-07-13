@@ -2,6 +2,10 @@
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 import path from "path";
+import Board from "../models/Board.js";
+import SnakeLadder from "../models/Snake_Ladder.js";
+import Player from "../models/Player.js";
+import Game from "../models/Game.js";
 
 const __dirname = path.resolve();
 
@@ -10,11 +14,12 @@ export default {
     // Create automatic seeders for each model
     // User Seeder
     const usersData = [];
+    // User Seeder
     for (let i = 0; i < 10; i++) {
       const userData = {
         name: faker.person.fullName(),
-        username: faker.internet.userName(),
-        password: faker.internet.password(),
+        username: `user${i + 1}`,
+        password: "1@Aaaaaa",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -22,70 +27,79 @@ export default {
     }
     await queryInterface.bulkInsert("Users", usersData, {});
     // Board Seeder
-    const boardsData = [];
     for (let i = 0; i < 5; i++) {
       const imageFile = fs.readFileSync(
-        path.join(__dirname, `./assets/images/board${i + 1}.png`)
+        path.join(__dirname, `./assets/images/board${i + 1}.jpg`)
       );
-      const buffer = toString(imageFile);
+      const buffer = Buffer.from(imageFile);
       const boardData = {
         Buffer: buffer,
-        fileExtension: "png",
+        fileExtension: "jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      boardsData.push(boardData);
+      await Board.create(boardData);
     }
-    await queryInterface.bulkInsert("Boards", boardsData, {});
     // Game Seeder
-    const gamesData = [];
     for (let i = 0; i < 5; i++) {
       const gameData = {
-        creator_id: faker.datatype.number({ min: 1, max: 10 }),
-        status: faker.helpers.arrayElement(["waiting", "playing", "finished"]),
+        creator_id: i + 1,
+        status: "waiting", // "waiting", "playing", "finished
         board_id: faker.datatype.number({ min: 1, max: 5 }),
-        players_number: faker.datatype.number({ min: 2, max: 4 }),
+        players_number: faker.datatype.number({ min: 2, max: 10 }),
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      gamesData.push(gameData);
-    }
-    await queryInterface.bulkInsert("Games", gamesData, {});
 
-    // Player Seeder
-    const playersData = [];
-    for (let i = 0; i < 10; i++) {
       const playerData = {
-        game_id: faker.datatype.number({ min: 1, max: 5 }),
-        user_id: faker.datatype.number({ min: 1, max: 10 }),
-        position: faker.datatype.number({ min: 1, max: 100 }),
-        player_order: faker.datatype.number({ min: 1, max: 5 }),
+        user_id: i + 1,
+        game_id: i + 1,
+        player_order: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      playersData.push(playerData);
+      await Game.create(gameData);
+      await Player.create(playerData);
     }
-    await queryInterface.bulkInsert("Players", playersData, {});
 
     // SnakeLadder Seeder
-    const snakeLaddersData = [];
     for (let i = 0; i < 5; i++) {
-      const snakeLadderData = {
-        board_id: faker.datatype.number({ min: 1, max: 5 }),
-        type: faker.lorem.words(1),
-        start: faker.datatype.number({ min: 1, max: 50 }),
-        end: faker.datatype.number({ min: 1, max: 50 }),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      snakeLaddersData.push(snakeLadderData);
+      const board_id = i + 1;
+      const num = Math.floor(Math.random() * 10) + 1;
+      for (let i = 0; i < num; i++) {
+        const type = Math.random() < 0.5 ? "snake" : "ladder";
+        // if type == ladder, start < end
+        if (type === "ladder") {
+          const start = Math.floor(Math.random() * 98) + 1;
+          const end = Math.floor(Math.random() * (99 - start)) + start + 1;
+          const ladder = await SnakeLadder.create({
+            board_id: board_id,
+            type: type,
+            start: start,
+            end: end,
+          });
+
+          console.log("ladder " + ladder.id + " created");
+        }
+        // if type == snake, start > end
+        else {
+          const start = Math.floor(Math.random() * 99) + 2;
+          const end = Math.floor(Math.random() * (start - 1)) + 1;
+          const snake = await SnakeLadder.create({
+            board_id: board_id,
+            type: type,
+            start: start,
+            end: end,
+          });
+
+          console.log("snake " + snake.id + " created");
+        }
+      }
     }
-    await queryInterface.bulkInsert("SnakeLadders", snakeLaddersData, {});
   },
 
   down: async (queryInterface, Sequelize) => {
     // Delete all the data seeded by the up function for each model
-
     await queryInterface.bulkDelete("Boards", null, {});
     await queryInterface.bulkDelete("Games", null, {});
     await queryInterface.bulkDelete("Players", null, {});

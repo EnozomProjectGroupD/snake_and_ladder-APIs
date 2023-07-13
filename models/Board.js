@@ -8,7 +8,7 @@ const Board = sequelize.define("Board", {
     primaryKey: true,
   },
   Buffer: {
-    type: DataTypes.BLOB("long"),
+    type : DataTypes.BLOB,
     allowNull: false,
   },
   fileExtension: {

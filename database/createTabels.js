@@ -8,16 +8,16 @@ import seed from "../seeders/20230709150000-all-seeders.js";
 import { Sequelize } from "sequelize";
 
 const createTables = () => {
-  sequelize
-    .sync({ force: true })
-    .then(() => {
-      console.log("Tables have been created");
-      const queryInterface = sequelize.getQueryInterface();
-      seed.up(queryInterface, Sequelize);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // sequelize
+  //   .sync({ force: true })
+  //   .then(() => {
+  //     console.log("Tables have been created");
+  //     const queryInterface = sequelize.getQueryInterface();
+  //     seed.up(queryInterface, Sequelize);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 Game.belongsTo(User, { foreignKey: "creator_id", as: "creator" });

@@ -160,11 +160,10 @@ const movePlayer = async (req, res) => {
     await player.update({ position: player.position });
 
     if (player.position === 100) {
-      game.status = "finished";
       // Emit 'game-finished' event to all connected clients in the game
       io.to(gameId).emit("game-finished", { game });
 
-      await game.update(game, { where: { id: game.id } });
+      await game.update({status:"finished"}, { where: { id: game.id } });
       return res.status(200).json({
         message: "success",
         rollValue,
